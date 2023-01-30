@@ -1,0 +1,6 @@
+INDEX VERSION 1.131+/home/farazulh/Github/SpringFramework/.metadata/.plugins/org.eclipse.jdt.core
+2580951524.index
+717216697.index
+3414360462.index
+782799139.index
+1865797976.index
