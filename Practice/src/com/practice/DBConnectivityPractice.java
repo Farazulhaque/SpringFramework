@@ -2,12 +2,7 @@ package com.practice;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Scanner;
 
 import com.dao.DbInterface;
@@ -16,6 +11,7 @@ import com.pojo.EmployeePojo;
 
 public class DBConnectivityPractice {
 
+	@SuppressWarnings("resource")
 	public static void main(String[] args) throws SQLException, UnsupportedEncodingException, NoSuchAlgorithmException {
 
 //		Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/cdacdb", "root", "password");// Establishing

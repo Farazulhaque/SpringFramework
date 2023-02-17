@@ -7,21 +7,30 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Properties;
 
 import com.pojo.EmployeePojo;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.*;
 
 public class DbService implements DbInterface {
 	static Connection con = null;
-	private static String user = "root";
-	private static String password = "password";
-	private static String dbName = "cdacdb";
-
+	private static String user;;
+	private static String password;;
+	private static String dbName;;
+	private static Properties properties = null;
 	// Static block is automatically called
 	static {
 		try {
+			properties = new Properties();
+			properties.load(new FileInputStream("resources/credential.properties"));
+			user = properties.getProperty("user");
+			password = properties.getProperty("password");
+			dbName = properties.getProperty("dbName");
 			String url = "jdbc:mysql://localhost:3306/" + dbName;
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			con = DriverManager.getConnection(url, user, password);
@@ -32,11 +41,15 @@ public class DbService implements DbInterface {
 			System.err.println("Driver class not found" + e);
 		} catch (SQLException e) {
 			System.err.println("SQL Exception while connection");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
 	}
 
-	@Override
 	public int insertEmployee(EmployeePojo employeePojo)
 			throws SQLException, UnsupportedEncodingException, NoSuchAlgorithmException {
 		String query = "insert into Employee(Name, Password, Dept) values(?,?,?)";
@@ -49,7 +62,6 @@ public class DbService implements DbInterface {
 		return i;
 	}
 
-	@Override
 	public void showEmployeeData() throws SQLException {
 		Statement stmt = con.createStatement();
 		String query = "select * from Employee";
@@ -60,7 +72,6 @@ public class DbService implements DbInterface {
 		}
 	}
 
-	@Override
 	public int authorizeEmployee(EmployeePojo emp)
 			throws SQLException, UnsupportedEncodingException, NoSuchAlgorithmException {
 		String query = "update Employee set Status = 1 where Name = ? and Password = ?";
@@ -72,7 +83,6 @@ public class DbService implements DbInterface {
 		return i;
 	}
 
-	@Override
 	public void showEmployeeNames() throws SQLException {
 		Statement stmt = con.createStatement();
 		String query = "select * from Employee";
@@ -90,7 +100,6 @@ public class DbService implements DbInterface {
 		}
 	}
 
-	@Override
 	public String encryptPassword(String password) throws UnsupportedEncodingException, NoSuchAlgorithmException {
 		/* MessageDigest instance for MD5. */
 		MessageDigest m = MessageDigest.getInstance("MD5");
