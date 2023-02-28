@@ -2,6 +2,8 @@ package com.rest;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,6 +11,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.dao.DbService;
 
 /**
  * Servlet implementation class Welcome
@@ -40,12 +45,21 @@ public class Welcome extends HttpServlet {
 		out.println("<p>Username: " + user);
 		out.println("</p><p>Password: " + password);
 		out.println("</p></body></html>");
-		if (user.equals("faraz") && password.equals("faraz123")) {
-			RequestDispatcher rd = request.getRequestDispatcher("Profile");
-//			rd.forward(request, response);
-			rd.include(request, response);
-		} else {
-			response.sendRedirect("https://www.google.com/");
+		ResultSet rs;
+		try {
+			rs = DbService.validate(user, password);
+			if (rs.next()) {
+				HttpSession hs = request.getSession();
+				hs.setAttribute("name", user);
+				hs.setAttribute("password", password);
+				System.out.println("Session Id: " + hs.getId());
+
+				RequestDispatcher rd = request.getRequestDispatcher("Profile");
+				rd.forward(request, response);
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 
 	}

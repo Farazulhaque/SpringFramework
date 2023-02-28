@@ -63,4 +63,13 @@ public class DbService {
 		return i;
 	}
 
+	public static ResultSet validate(String uname, String pass) throws SQLException {
+		String query = "select * from student where Name=? and Password=?";
+		PreparedStatement ps = con.prepareStatement(query);
+		ps.setString(1, uname);
+		ps.setString(2, pass);
+		ResultSet rs = ps.executeQuery();
+		return rs;
+	}
+
 }
