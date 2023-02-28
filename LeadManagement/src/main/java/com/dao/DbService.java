@@ -55,4 +55,12 @@ public class DbService {
 		return rs;
 	}
 
+	public static int deleteStudentData(int sid) throws SQLException {
+		String query = "delete from student where sid=?";
+		PreparedStatement ps = con.prepareStatement(query);
+		ps.setInt(1, sid);
+		int i = ps.executeUpdate();
+		return i;
+	}
+
 }
